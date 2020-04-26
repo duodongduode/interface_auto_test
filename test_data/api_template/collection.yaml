@@ -1,0 +1,33 @@
+#收藏夹相关的测试用例
+
+
+#创建收藏夹的接口
+- api_template:
+    name: create_collection
+    url : ${base_url}/hahu/addCollection
+    method: post
+    cookie:
+      loginToken: ${loginToken}
+    data:
+      collectionName: ${{random_str(7)}}
+
+    verfiy:
+      - module: response_code
+        operator: "="
+        expect_value: 200
+
+#删除收藏夹的接口
+- api_template:
+    name: delete_collection
+    url : ${base_url}/hahu/delete_collection
+    method: get
+    cookie:
+      loginToken: ${loginToken}
+    data:
+      collectionId: 123
+
+    verfiy:
+      - module: response_code
+        operator: "="
+        expect_value: 200
+

@@ -1,0 +1,34 @@
+
+#用户管理相关的测试用例集
+
+- api_template:
+    name: register
+    url: ${base_url}/hahu/register  # ${变量名}  引用变量名
+    method: post
+    data:
+      username: 123
+      email: ${{random_int(10000,20000)}}@qq.com  #${{函数(参数)}}   引用函数格式
+      password: 123456
+    verify:
+      - module: response_code  #取值模块 response_code,header,cookie,response_content
+        #value_path:  取值方式是响应码这个字段可以不填
+        operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+        expect_value: 200
+      - module: response_code  #取值模块 response_code,header,cookie,response_content
+        #value_path:  取值方式是响应码这个字段可以不填
+        operator: "="  # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none   yaml我们可以使用"[]"进行转义
+        expect_value: 200
+
+- api_template:
+    name: login
+    url: ${base_url}/hahu/login  # ${变量名}  引用变量名
+    method: post
+    data:
+      email: ${{random_int(10000,20000)}}@qq.com  #${{函数(参数)}}   引用函数格式
+      password: 123456
+    verify:
+      - module: response_code  #取值模块 response_code,header,cookie,response_content
+        #value_path:  取值方式是响应码这个字段可以不填
+        operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+        expect_value: 200
+

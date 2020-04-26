@@ -1,0 +1,116 @@
+#创建收藏夹的测试用例
+
+- setupclass:
+
+    - step:
+        name: 用例集前置步骤
+        type: api
+        api: user_manage.yaml_login
+        data:
+          email: 496520371@qq.com
+          password: 123456
+        verify:
+          - module: cookie  #取值模块 response_code,header,cookie,response_content
+            value_path: $.loginToken #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.data.userInfo.username #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+        extractor:
+          - name: loginToken
+            module: cookie
+            value_path: $.loginToken  #数据库结果取值 $X.y第x-1行结果的y-1列
+            parameter_level: global # testcase、 testsuite、 global
+          - name: user_id
+            module: response_content
+            value_path: $.data.userInfo.userId  #数据库结果取值 $X.y第x-1行结果的y-1列
+            parameter_level: global # testcase、 testsuite、 global
+
+
+
+- testcase:
+    - name: 创建收藏夹名字为空
+    - step:
+        type: api
+        api: collection.yaml_create_collection
+        data:
+          collectionName: ""
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.msg #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 收藏夹的长度是1-20个字符
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 1
+
+- testcase:
+    - name: 创建收藏夹名字为20个字符
+    - variable:
+        collectionName: 123QWE哈哈!@123QWE哈哈!@
+    - step:
+        type: api
+        api: collection.yaml_create_collection
+        data:
+          collectionName: ${collectionName}
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0
+
+- testcase:
+    - name: 创建收藏夹名字为1个字符
+    - variable:
+        collectionName: m
+    - step:
+        type: api
+        api: collection.yaml_create_collection
+        data:
+          collectionName: ${collectionName}
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0
+
+
+- testcase:
+    - name: 创建收藏夹的名字不能重复
+    - variable:
+        collectionName: abdd123
+    - step:
+        type: api
+        api: collection.yaml_create_collection
+        data:
+          collectionName: ${collectionName}
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0
+    - step:
+        type: api
+        api: collection.yaml_create_collection
+        data:
+          collectionName: ${collectionName}
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.msg #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 创建的收藏夹名字重复
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 1
+
+
+
+
+- teardown:
+    - step:
+        name: 查询数据
+        type: sql
+        sql: DELETE FROM collection WHERE collection_name='${collectionName}' AND user_id= '${user_id}' ;

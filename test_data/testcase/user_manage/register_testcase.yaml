@@ -1,0 +1,113 @@
+#注册的测试用例
+
+- setupclass:
+    - variable:
+        hhh: yyy
+        aaa: bbb
+    - step:
+        name: 用例集前置步骤
+        type: api
+        api: user_manage.yaml_login
+        data:
+          email: 496520371@qq.com
+          password: 123456
+        verify:
+          - module: cookie  #取值模块 response_code,header,cookie,response_content
+            value_path: $.loginToken #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.data.userInfo.username #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+
+- setup:
+    - step:
+        name: 查询数据
+        type: sql
+        sql: SELECT answer_id FROM answer WHERE is_delete=0 ;
+        verify:
+          - value_path: $.0.0
+            operator: ">=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0
+        extractor:
+          - name: answer_id
+            value_path: $.10.0  #数据库结果取值 $.X.y第x-1行结果的y-1列
+            parameter_level: testcase # testcase、 testsuite、 global
+
+- testcase:
+    - name: 用户名长度11位，注册失败
+    - step:
+        type: api
+        api: user_manage.yaml_register
+        data:
+          username: 12345678901
+          email: 111@qq.com
+          password: 123456
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.msg #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 用户名长度须在1-10个字符
+
+- testcase:
+    - name: 正确的用户名、邮箱和密码，注册成功
+    - variable:
+        email: ${{random_int(10000,20000)}}@qq.com
+    - step:
+        type: api
+        api: user_manage.yaml_register
+        data:
+          username: 1234567
+          email: ${email}
+          password: 123456
+        verify:
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.msg #取值方式是响应码这个字段可以不填
+            operator: contains # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 注册成功
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.state #取值方式是响应码这个字段可以不填
+            operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0
+
+    - step:
+          type: api
+          api: user_manage.yaml_login
+          data:
+            email: ${email}
+            password: 123456
+          verify:
+            - module: cookie  #取值模块 response_code,header,cookie,response_content
+              value_path: $.loginToken #取值方式是响应码这个字段可以不填
+              operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+
+- teardownclass:
+
+    - step:
+        name: 用例集前置步骤
+        type: api
+        api: user_manage.yaml_login
+        data:
+          email: ${email}
+          password: ${password}
+        verify:
+          - module: cookie  #取值模块 response_code,header,cookie,response_content
+            value_path: $.loginToken #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+          - module: response_content  #取值模块 response_code,header,cookie,response_content
+            value_path: $.data.userInfo.username #取值方式是响应码这个字段可以不填
+            operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+
+
+- teardown:
+    - step:
+        name: 查询数据
+        type: sql
+        sql: SELECT answer_id FROM answer WHERE is_delete=0 ;
+        verify:
+          - value_path: $.0.0
+            operator: ">=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
+            expect_value: 0

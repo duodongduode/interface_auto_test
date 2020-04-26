@@ -1,0 +1,14 @@
+
+#系统的基础路径
+base_url: http://188.131.183.182:2132
+#系统的用户名
+email: 496520371@qq.com
+#系统的账号
+password: 123456
+
+
+database_user: root
+database_password: 12345678x
+database_ip: 188.131.183.182
+database_port: 3306
+database_name: hahu2
