@@ -13,6 +13,7 @@ import os
 from unittest import  defaultTestLoader
 from core.HTMLTestRunner_cn import HTMLTestRunner
 import logging
+import time
 logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 def read_data( run_path):
@@ -42,10 +43,12 @@ def run(run_path):
     read_data(run_path)
     path = os.getcwd()
     cases = defaultTestLoader.discover(path, pattern="testcase.py")
-    report_path = path+"/../report/自动化测试报告.html"
+    time_str = time.strftime("%Y%m%d_%H%M%S", time.localtime())  # 生成一个年月日时分秒的时间戳
+    report_path = path+"/../report/自动化测试报告"+time_str+".html"
     f = open(report_path,"wb")
     h = HTMLTestRunner(f,verbosity=2,title="接口自动化")
     h.run(cases)
+    f.close()
 
 
 
