@@ -5,28 +5,27 @@
     - step:
         name: 用例集前置步骤
         type: api
-        api: user_manage.yaml_login
-        data:
+        api: user_manage.yaml_login #引用接口模板的格式:接口模板文件名_接口名称
+        data: #调用接口传递的数据
           email: 496520371@qq.com
           password: 123456
-        verify:
+        verify: #接口的验证方法
           - module: cookie  #取值模块 response_code,header,cookie,response_content
-            value_path: $.loginToken #取值方式是响应码这个字段可以不填
+            value_path: $.loginToken #取值方式是响应码这个字段可以不填，取值是jsonpath表达式
             operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
 
           - module: response_content  #取值模块 response_code,header,cookie,response_content
-            value_path: $.data.userInfo.username #取值方式是响应码这个字段可以不填
+            value_path: $.data.userInfo.username #取值方式是响应码这个字段可以不填，取值是jsonpath表达式
             operator: not none # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
-        extractor:
+        extractor: #接口的参数提取
           - name: loginToken
             module: cookie
-            value_path: $.loginToken  #数据库结果取值 $X.y第x-1行结果的y-1列
+            value_path: $.loginToken  #取值方式是响应码这个字段可以不填，取值是jsonpath表达式
             parameter_level: global # testcase、 testsuite、 global
           - name: user_id
             module: response_content
-            value_path: $.data.userInfo.userId  #数据库结果取值 $X.y第x-1行结果的y-1列
+            value_path: $.data.userInfo.userId  #取值方式是响应码这个字段可以不填，取值是jsonpath表达式
             parameter_level: global # testcase、 testsuite、 global
-
 
 
 - testcase:
@@ -105,8 +104,6 @@
             value_path: $.state #取值方式是响应码这个字段可以不填
             operator: "=" # 比较器 =,>,>=,=<,<,in,not in, length,contains,none,not none
             expect_value: 1
-
-
 
 
 - teardown:

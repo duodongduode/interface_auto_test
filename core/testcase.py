@@ -360,13 +360,13 @@ class MyTestcase(TestCase):
             response = requests.get(url, params=data, headers=headers, cookies=cookies)
         elif method.lower() == 'post':
             if headers != None and headers.get("Content-type") != None and 'json' in headers.get("Content-type"):
-                response = requests.post(url, json=data, headers=headers, cookies=cookies)
+                response = requests.post(url, json=data, headers=headers, cookies=cookies, verify=False)
             else:
-                response = requests.post(url, data=data, headers=headers, cookies=cookies)
+                response = requests.post(url, data=data, headers=headers, cookies=cookies, verify=False)
         elif method.lower() == 'put':
-            response = requests.put(url, data=data, headers=headers, cookies=cookies)
+            response = requests.put(url, data=data, headers=headers, cookies=cookies, verify=False)
         else:
-            response = requests.delete(url, headers=headers, cookies=cookies)
+            response = requests.delete(url, headers=headers, cookies=cookies, verify=False)
 
         # 执行验证方法
 

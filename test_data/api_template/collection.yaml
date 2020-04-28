@@ -3,18 +3,18 @@
 
 #创建收藏夹的接口
 - api_template:
-    name: create_collection
-    url : ${base_url}/hahu/addCollection
-    method: post
-    cookie:
+    name: create_collection  #接口的名字
+    url : ${base_url}/hahu/addCollection #接口的路径url
+    method: post #接口的方法
+    cookie: #接口对应的cookie
       loginToken: ${loginToken}
     data:
       collectionName: ${{random_str(7)}}
 
     verfiy:
-      - module: response_code
-        operator: "="
-        expect_value: 200
+      - module: response_code  #接口验证取值模块
+        operator: "="  #验证比较符
+        expect_value: 200  #预期值
 
 #删除收藏夹的接口
 - api_template:

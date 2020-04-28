@@ -6,7 +6,7 @@ email: 496520371@qq.com
 #系统的账号
 password: 123456
 
-
+#系统的数据库配置
 database_user: root
 database_password: 12345678x
 database_ip: 188.131.183.182

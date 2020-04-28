@@ -32,7 +32,7 @@
             expect_value: 0
         extractor:
           - name: answer_id
-            value_path: $.10.0  #数据库结果取值 $.X.y第x-1行结果的y-1列
+            value_path: $.10.0  #数据库结果取值 $.X.y第x行结果的y列
             parameter_level: testcase # testcase、 testsuite、 global
 
 - testcase:
