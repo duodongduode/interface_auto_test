@@ -1,7 +1,6 @@
 #创建收藏夹的测试用例
 
 - setupclass:
-
     - step:
         name: 用例集前置步骤
         type: api

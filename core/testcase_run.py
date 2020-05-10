@@ -59,5 +59,5 @@ def run(run_path):
 if __name__ == '__main__':
 
     path = os.getcwd()
-
     run(path+"/../test_data//testcase")
+    #run(path + "/../test_data/testcase/mall")
