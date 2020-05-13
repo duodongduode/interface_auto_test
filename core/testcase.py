@@ -277,7 +277,7 @@ class MyTestcase(TestCase):
                         common_data.testsuite_vars[name] = value
 
                     if parameter_level == "global":
-                        common_data.testsuite_vars[name] = value
+                        common_data.global_vars[name] = value
                 except:
                     print(value_path," 提取参数值失败")
 
@@ -433,7 +433,7 @@ class MyTestcase(TestCase):
                     common_data.testsuite_vars[name] = value
 
                 if parameter_level == "global":
-                    common_data.testsuite_vars[name] = value
+                    common_data.global_vars[name] = value
 
                 msg = "name:" + name + "\t module: " + module+ "value_path: " + value_path + "\t parameter_level:" + parameter_level + "\t value：" + str(
                     value)
